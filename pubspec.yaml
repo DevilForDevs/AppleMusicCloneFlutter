@@ -1,0 +1,47 @@
+name: apple_music
+description: "A new Flutter project."
+
+publish_to:
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.9
+  get: ^4.7.2
+  http: ^1.6.0
+  just_audio: ^0.10.4
+  just_audio_windows: ^0.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/icons/
+    - assets/images/misc/
+    - assets/images/selected/
+    - assets/images/unselected/
+    - assets/images/playerControls/
+
+  fonts:
+    - family: SFPro
+      fonts:
+        - asset: assets/fonts/SF-Pro-Display-Medium.otf
+          weight: 500
+        - asset: assets/fonts/SF-Pro-Display-Bold.otf
+          weight: 700
+        - asset: assets/fonts/SF-Pro-Text-Regular.otf
+          weight: 400
+        - asset: assets/fonts/SF-Pro-Display-Semibold.otf
+          weight: 600
