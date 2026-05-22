@@ -1,23 +1,39 @@
+import 'package:apple_music/screens/BottomNav/BottomNavScreen.dart';
+import 'package:apple_music/screens/PlayerScreen/PlayerScreen.dart';
 import 'package:apple_music/screens/SetupScreens/SplashScreen/SplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:media_kit/media_kit.dart';
 
 import 'TopLevelController.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
+
+  final box = GetStorage();
+  final isFirstLaunch = box.read('first_launch') ?? true;
+
+  if (isFirstLaunch) {
+    box.write('first_launch', false);
+  }
+
   Get.put(TopLevelController(), permanent: true);
-  runApp(const MyApp());
+  runApp(MyApp(isFirstLaunch: isFirstLaunch));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.isFirstLaunch});
+  final bool isFirstLaunch;
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Apple Music',
-      home: const Splashscreen(),
+      home:isFirstLaunch?const Splashscreen():PlayerScreen(),
     );
   }
 }
