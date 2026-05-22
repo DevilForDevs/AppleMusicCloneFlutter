@@ -17,6 +17,7 @@ dependencies:
   http: ^1.6.0
   just_audio: ^0.10.4
   just_audio_windows: ^0.2.2
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:

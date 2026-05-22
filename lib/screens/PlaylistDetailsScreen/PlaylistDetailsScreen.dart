@@ -72,7 +72,7 @@ class PlaylistDetailsScreen extends StatelessWidget {
                       item: song,
                       index: index,
                       onItemClick:(item){
-                        tpc.loadSong(item);
+                        // tpc.loadSong(item);
                         tpc.suggestions.clear();
                         tpc.suggestions.addAll(controller.songs);
                         Get.to(PlayerScreen());

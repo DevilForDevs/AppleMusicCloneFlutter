@@ -17,6 +17,7 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TopLevelController controller = Get.find<TopLevelController>();
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(0),
@@ -71,9 +72,31 @@ class PlayerScreen extends StatelessWidget {
                     return ProgressInfoView(totalSeconds: controller.totalSeconds.value, passedSeconds: controller.passedSeconds.value, onChanged:controller.handleSeek);
                   }),
                   SizedBox(height: 24,),
-                  Obx((){
-                    return PlayerControls(isPlaying: controller.isPlaying.value, onPlayPause: controller.togglePlayPause, onForward: (){}, onBackward:(){});
-                  })
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Obx(() {
+                        return PlayerControls(
+                          isPlaying: controller.isPlaying.value,
+                          onPlayPause: controller.togglePlayPause,
+                          onForward: () {},
+                          onBackward: () {},
+                        );
+                      }),
+
+                      Obx(() {
+                        return controller.isLoading.value
+                            ? const SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                          ),
+                        )
+                            : const SizedBox.shrink();
+                      }),
+                    ],
+                  )
                   ,
                   SizedBox(height: 24,),
                   Obx((){

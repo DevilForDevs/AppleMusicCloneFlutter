@@ -51,7 +51,7 @@ class BottomNavScreen extends StatelessWidget {
             return FloatingPlayer(
               onTitleClick: ()=>Get.to(PlayerScreen()),
               item: song,
-              playPause: tpc.togglePlayPause,
+              playPause: (){},
               isPlaying: tpc.isPlaying.value,
             );
           }),

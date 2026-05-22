@@ -103,7 +103,7 @@ class _ListenNowState extends State<ListenNow> {
                 return PlaylistRow(
                   section: section,
                   onTapPlaylist: navigate,
-                  onTapSong: tpc.loadSong,
+                  onTapSong: (song){},
                 );
               },
             ),
