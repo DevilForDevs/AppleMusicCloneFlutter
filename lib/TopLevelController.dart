@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:apple_music/utils/RandomStringGenerator.dart';
-import 'package:apple_music/utils/endpoints/getVisitorId.dart';
 import 'package:apple_music/utils/endpoints/streamingData.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -16,8 +15,6 @@ class TopLevelController extends GetxController {
 
   var isLoading = false.obs;
   var isPlaying = false.obs;
-  var showVideo = false.obs;
-
 
   Rxn<SongItem> selectedSong = Rxn<SongItem>();
 
@@ -35,8 +32,6 @@ class TopLevelController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final item=SongItem(title: "haan tu hai",videoId: "dnND99uRz5o");
-    loadSong(item);
 
     _listenPlayer();
     player.setVolume(volume.value / 100);
@@ -97,12 +92,9 @@ class TopLevelController extends GetxController {
       final tp =
       RandomStringGenerator.generateTParameter();
 
-      final visitorId=await getVisitorId();
-      // client["client"]["visitorData"]
-
       final result = await androidPlayerResponse(
         cpn,
-        visitorId,
+        client["client"]["visitorData"],
         item.videoId!,
         tp,
       );
@@ -143,9 +135,7 @@ class TopLevelController extends GetxController {
       final audioUrl = audio140["url"];
 
 
-
       if (audioUrl == null) {
-        title.value="Missing Audio Url, Retry";
         throw Exception("Audio url missing");
       }
 

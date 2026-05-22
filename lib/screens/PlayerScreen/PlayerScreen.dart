@@ -8,7 +8,6 @@ import 'package:apple_music/screens/PlayerScreen/widgets/VolumeControl.dart';
 import 'package:apple_music/screens/widgets/SongViewItem.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 
 class PlayerScreen extends StatelessWidget {
 
@@ -18,7 +17,6 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TopLevelController controller = Get.find<TopLevelController>();
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(0),
@@ -60,15 +58,8 @@ class PlayerScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Obx((){
-                    return controller.showVideo.value?Stack(
-                      children: [
-
-                      ],
-                    ):GestureDetector(
-                      onDoubleTap: (){},
-                      child: Image.network(
-                        "https://img.youtube.com/vi/${controller.selectedSong.value?.videoId}/maxresdefault.jpg",
-                      ),
+                    return Image.network(
+                      "https://img.youtube.com/vi/${controller.selectedSong.value?.videoId}/maxresdefault.jpg",
                     );
                   }),
                   Obx((){
@@ -80,31 +71,9 @@ class PlayerScreen extends StatelessWidget {
                     return ProgressInfoView(totalSeconds: controller.totalSeconds.value, passedSeconds: controller.passedSeconds.value, onChanged:controller.handleSeek);
                   }),
                   SizedBox(height: 24,),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Obx(() {
-                        return PlayerControls(
-                          isPlaying: controller.isPlaying.value,
-                          onPlayPause: controller.togglePlayPause,
-                          onForward: () {},
-                          onBackward: () {},
-                        );
-                      }),
-
-                      Obx(() {
-                        return controller.isLoading.value
-                            ? const SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3,
-                          ),
-                        )
-                            : const SizedBox.shrink();
-                      }),
-                    ],
-                  )
+                  Obx((){
+                    return PlayerControls(isPlaying: controller.isPlaying.value, onPlayPause: controller.togglePlayPause, onForward: (){}, onBackward:(){});
+                  })
                   ,
                   SizedBox(height: 24,),
                   Obx((){

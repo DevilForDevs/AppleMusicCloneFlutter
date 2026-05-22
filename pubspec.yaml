@@ -17,10 +17,6 @@ dependencies:
   http: ^1.6.0
   just_audio: ^0.10.4
   just_audio_windows: ^0.2.2
-  get_storage: ^2.1.1
-  media_kit: ^1.2.6
-  media_kit_video: ^2.0.1
-  media_kit_libs_video: ^1.0.7
 
 dev_dependencies:
   flutter_test:
