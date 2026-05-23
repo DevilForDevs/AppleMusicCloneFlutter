@@ -1,3 +1,5 @@
+[![Figma Design](https://img.shields.io/badge/Figma-Design-blue?logo=figma)](https://figma.com/design/euXFbAMB6LCNqaL9h0G8Uo/Apple-Music-UI-Kit--Community-?m=auto&t=01sgs7kvm6MrXlfJ-6)
+
 # Apple Music Desktop Clone
 
 A cross-platform Apple Music inspired desktop application built with Flutter.
@@ -88,4 +90,6 @@ Main components include:
 ## Clone Repository
 
 ```bash
-git clone https://github.com/DevilForDevs/AppleMusicCloneFlutter****
+git clone https://github.com/DevilForDevs/AppleMusicCloneFlutter
+
+```
