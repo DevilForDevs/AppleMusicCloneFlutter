@@ -1,5 +1,4 @@
 import 'package:apple_music/screens/BottomNav/BottomNavScreen.dart';
-import 'package:apple_music/screens/PlayerScreen/PlayerScreen.dart';
 import 'package:apple_music/screens/SetupScreens/SplashScreen/SplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,7 +30,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Apple Music',
       home:isFirstLaunch?const Splashscreen():BottomNavScreen(),
     );

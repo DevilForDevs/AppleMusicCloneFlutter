@@ -91,6 +91,7 @@ class PlayerScreen extends StatelessWidget {
                           height: 50,
                           child: CircularProgressIndicator(
                             strokeWidth: 3,
+                            color: Color(0xFFFF2D55),
                           ),
                         )
                             : const SizedBox.shrink();
@@ -114,14 +115,15 @@ class PlayerScreen extends StatelessWidget {
                       itemCount: controller.suggestions.length,
                       itemBuilder: (context, index) {
                         final song = controller.suggestions[index];
-
-                        return SongViewItem(
-                          item: song,
-                          onItemClick:(item){
-                            controller.loadSong(item);
-                          },
-                          isPlaying: controller.selectedSong.value?.videoId==song.videoId,
-                        );
+                        return Obx((){
+                          return SongViewItem(
+                            item: song,
+                            onItemClick:(item){
+                              controller.loadSong(item);
+                            },
+                            isPlaying: controller.selectedSong.value?.videoId==song.videoId,
+                          );
+                        });
                       },
                     );
                   }),

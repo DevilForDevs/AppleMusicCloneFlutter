@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../TopLevelController.dart';
-import '../../../PlaylistDetailsScreen/ScreenController.dart';
 
 class ListenNow extends StatefulWidget {
   const ListenNow({super.key});
@@ -103,7 +102,10 @@ class _ListenNowState extends State<ListenNow> {
                 return PlaylistRow(
                   section: section,
                   onTapPlaylist: navigate,
-                  onTapSong: (song){},
+                  onTapSong: (song){
+                    print("loadingsong");
+                    tpc.loadSong(song);
+                  },
                 );
               },
             ),
