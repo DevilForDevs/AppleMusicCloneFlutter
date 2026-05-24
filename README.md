@@ -126,7 +126,7 @@ Main components include:
 | Platform | Support |
 |----------|----------|
 | Windows  | ✅ |
-| Android  | 🚧 |
+| Android  | ✅ |
 
 ---
 
