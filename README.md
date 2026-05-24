@@ -26,6 +26,27 @@ This project recreates the Apple Music desktop experience with playlist browsing
 
 <img width="1024" height="768" alt="Player Screen" src="https://github.com/user-attachments/assets/ceac0fbd-ce09-4e66-abcc-2b7bae4d9a49" />
 
+Mobile Screen shots
+
+<table>
+  <tr>
+    <td align="center">
+      <b>Homepage</b><br>
+      <img src="https://github.com/user-attachments/assets/fbf2985a-0850-4c02-9044-ba256f623d97" width="220"/>
+    </td>
+    <td align="center">
+      <b>Playlist Page</b><br>
+      <img src="https://github.com/user-attachments/assets/8e8e360f-25f2-4417-9bd6-87710b0bb0f5" width="220"/>
+    </td>
+    <td align="center">
+      <b>Player Screen</b><br>
+      <img src="https://github.com/user-attachments/assets/18e36ce5-ccd0-433f-825b-c60ef24ee538" width="220"/>
+    </td>
+  </tr>
+</table>
+
+
+
 ---
 
 # Features
