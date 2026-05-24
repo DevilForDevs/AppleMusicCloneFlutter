@@ -1,5 +1,21 @@
 Figma Design Link 👉 [![Figma Design](https://img.shields.io/badge/Figma-Design-blue?logo=figma)](https://figma.com/design/euXFbAMB6LCNqaL9h0G8Uo/Apple-Music-UI-Kit--Community-?m=auto&t=01sgs7kvm6MrXlfJ-6)
 
+## Download
+
+<p align="center">
+  <a href="https://github.com/DevilForDevs/AppleMusicCloneFlutter/releases">
+    <img src="https://img.shields.io/badge/Download-Android_APK-3DDC84?style=for-the-badge&logo=android&logoColor=white" />
+  </a>
+
+  <a href="https://github.com/DevilForDevs/AppleMusicCloneFlutter/releases">
+    <img src="https://img.shields.io/badge/Download-Windows_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" />
+  </a>
+</p>
+
+### Latest Release
+
+[![GitHub release](https://img.shields.io/github/v/release/DevilForDevs/AppleMusicCloneFlutter?style=for-the-badge)](https://github.com/DevilForDevs/AppleMusicCloneFlutter/releases)
+
 # Apple Music Desktop Clone
 
 A cross-platform Apple Music inspired desktop application built with Flutter.
