@@ -16,7 +16,7 @@ Figma Design Link 👉 [![Figma Design](https://img.shields.io/badge/Figma-Desig
 
 [![GitHub release](https://img.shields.io/github/v/release/DevilForDevs/AppleMusicCloneFlutter?style=for-the-badge)](https://github.com/DevilForDevs/AppleMusicCloneFlutter/releases)
 
-# Apple Music Desktop Clone
+# Apple Music Clone
 
 A cross-platform Apple Music inspired desktop application built with Flutter.
 
@@ -24,7 +24,7 @@ This project recreates the Apple Music desktop experience with playlist browsing
 
 ---
 
-# Screenshots
+# Screenshots Desktop
 
 ## Home Page
 
@@ -42,7 +42,7 @@ This project recreates the Apple Music desktop experience with playlist browsing
 
 <img width="1024" height="768" alt="Player Screen" src="https://github.com/user-attachments/assets/ceac0fbd-ce09-4e66-abcc-2b7bae4d9a49" />
 
-Mobile Screen shots
+# Screenshots Mobile
 
 <table>
   <tr>
