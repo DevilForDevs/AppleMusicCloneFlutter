@@ -1,6 +1,7 @@
 import 'package:apple_music/screens/BottomNav/screens/ListenNow/utils/endpoints.dart';
 import 'package:apple_music/screens/BottomNav/screens/ListenNow/utils/feedsparser.dart';
 import 'package:apple_music/screens/BottomNav/screens/ListenNow/utils/musicfeedContinuation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:get/get.dart';
 
@@ -25,7 +26,7 @@ class ListenNowController extends GetxController {
   }
 
 
-  Future<void> loadFeeds() async {
+  Future<void> loadFeeds({int retryCount = 0}) async {
     if (feeds.isNotEmpty) return;
     if (isLoading.value) return;
 
@@ -60,9 +61,25 @@ class ListenNowController extends GetxController {
       continuation.value = data2.continuation;
 
       print("Final feeds: ${feeds.length}");
+
+      if (feeds.isEmpty && retryCount < 3) {
+        print("Retrying loadFeeds... Attempt ${retryCount + 1}");
+        await Future.delayed(const Duration(seconds: 1));
+
+        isLoading.value = false;
+
+        return loadFeeds(retryCount: retryCount + 1);
+      }
     } catch (e, s) {
-      print(e);
-      print(s);
+      Fluttertoast.showToast(msg: e.toString());
+      if (retryCount < 3) {
+        print("Retrying after error... Attempt ${retryCount + 1}");
+        await Future.delayed(const Duration(seconds: 1));
+
+        isLoading.value = false;
+
+        return loadFeeds(retryCount: retryCount + 1);
+      }
     } finally {
       isLoading.value = false;
     }

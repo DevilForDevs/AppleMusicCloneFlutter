@@ -1,10 +1,10 @@
 import 'dart:async';
-
-import 'package:apple_music/utils/RandomStringGenerator.dart';
+import 'dart:io';
 import 'package:apple_music/utils/endpoints/streamingData.dart';
+import 'package:apple_music/utils/endpoints/visitorIdfetcher.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'models/SongItem.dart';
 
 class TopLevelController extends GetxController {
@@ -22,7 +22,7 @@ class TopLevelController extends GetxController {
 
   RxDouble totalSeconds = 0.0.obs;
   RxDouble passedSeconds = 0.0.obs;
-  RxDouble volume = 50.0.obs;
+  RxDouble volume = 25.0.obs;
 
   RxString title = "Loading".obs;
   RxString des = "Loading".obs;
@@ -30,9 +30,11 @@ class TopLevelController extends GetxController {
   StreamSubscription<Duration>? _positionSub;
   StreamSubscription<PlayerState>? _playerStateSub;
   StreamSubscription<Duration?>? _durationSub;
+  StreamSubscription<PlayerState>? _loadingStateListenerSub;
 
-  // prevents race conditions
-  int _loadRequestId = 0;
+
+
+
 
   @override
   void onInit() {
@@ -41,6 +43,7 @@ class TopLevelController extends GetxController {
     _listenPlayer();
 
     player.setVolume(volume.value / 100);
+
   }
 
   void _listenPlayer() {
@@ -108,130 +111,115 @@ class TopLevelController extends GetxController {
         });
   }
 
-  Future<void> loadSong(SongItem item) async {
+  Future<void> loadSong(SongItem item,) async {
 
-    final requestId = ++_loadRequestId;
-
-    print("Loading: ${item.title}");
-
-    // prevent same song reload
-    if (selectedSong.value?.videoId ==
-        item.videoId &&
-        player.playing) {
+    if (selectedSong.value?.videoId == item.videoId) {
       return;
     }
 
+    selectedSong.value = item;
+
+    isLoading.value = true;
+
     try {
 
-      isLoading.value = true;
-
-      // immediately update UI selection
-      selectedSong.value = item;
-
-      final cpn =
-      RandomStringGenerator
-          .generateContentPlaybackNonce();
-
-      final tp =
-      RandomStringGenerator
-          .generateTParameter();
-
-      final result =
-      await androidPlayerResponse(
-        cpn,
-        client["client"]["visitorData"],
-        item.videoId!,
-        tp,
-      );
-
-      // old request ignored
-      if (requestId != _loadRequestId) {
-        return;
-      }
-
-      final playerResponse =
-      result["playerResponse"];
-
-      final videoDetails =
-      playerResponse["videoDetails"];
-
-      title.value =
-          videoDetails?["title"] ??
-              "Unknown Title";
-
-      des.value =
-          videoDetails?["author"] ??
-              "Unknown Artist";
-
-      final adaptiveFormats =
-      playerResponse["streamingData"]
-      ["adaptiveFormats"] as List<dynamic>;
-
-      Map<String, dynamic>? audio140;
-
-      for (final format in adaptiveFormats) {
-
-        if (format["itag"] == 140) {
-
-          audio140 =
-          Map<String, dynamic>.from(
-            format,
-          );
-
-          break;
-        }
-      }
-
-      if (audio140 == null) {
-        throw Exception(
-          "itag 140 audio not found",
-        );
-      }
-
-      final audioUrl = audio140["url"];
-
-      if (audioUrl == null) {
-        throw Exception(
-          "Audio url missing",
-        );
-      }
-
-      // old request ignored
-      if (requestId != _loadRequestId) {
-        return;
-      }
-
-      // important
       await player.stop();
-
-      // old request ignored
-      if (requestId != _loadRequestId) {
-        return;
-      }
 
       passedSeconds.value = 0;
       totalSeconds.value = 0;
 
-      await player.setUrl(audioUrl);
+      title.value = "Loading...";
+      des.value = "Loading...";
 
-      // old request ignored
-      if (requestId != _loadRequestId) {
+      String? audioUrl;
+      Map<String, dynamic>? playerResponse;
+      int maxAttempts = 3;
+
+      // Retry loop: try up to 3 times if audio URL is null
+      for (int attempt = 0; attempt < maxAttempts; attempt++) {
+        try {
+          // Get a fresh visitorId on each attempt
+          final visitorId = await getVisitorId();
+
+          playerResponse =
+          await androidPlayerResponse(
+            item.videoId ?? "",
+            visitorId,
+          );
+
+          audioUrl = extractAudioUrl(
+            playerResponse["playerResponse"],
+          );
+
+          // If we got the audio URL, break out of the retry loop
+          if (audioUrl != null) {
+            title.value =
+            playerResponse["playerResponse"]
+            ["videoDetails"]["title"];
+
+            des.value =
+            playerResponse["playerResponse"]
+            ["videoDetails"]["author"];
+            
+            break;
+          }
+
+          // If this was the last attempt and audioUrl is still null, show error
+          if (attempt == maxAttempts - 1) {
+            Fluttertoast.showToast(
+              msg: "Failed to get audio url after $maxAttempts attempts",
+            );
+            return;
+          }
+
+        } catch (e) {
+          print("Attempt ${attempt + 1} failed: $e");
+          
+          // If this was the last attempt, show error
+          if (attempt == maxAttempts - 1) {
+            Fluttertoast.showToast(
+              msg: "Failed to load song after $maxAttempts attempts",
+            );
+            return;
+          }
+        }
+      }
+
+      if (audioUrl == null) {
         return;
       }
 
-      await player.play();
+      await player.setUrl(audioUrl);
+      isLoading.value = false;
+
+      await _startPlayback();
 
     } catch (e) {
 
-      print("Load song error: $e");
+      print(e);
 
     } finally {
 
-      if (requestId == _loadRequestId) {
-        isLoading.value = false;
-      }
+      isLoading.value = false;
     }
   }
+
+
+  Future<void> _startPlayback() async {
+    await player.seek(Duration.zero);
+
+    for (var attempt = 0; attempt < 3; attempt++) {
+      await player.play();
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (player.playing) {
+        return;
+      }
+    }
+
+  }
+
 
   Future<void> togglePlayPause() async {
 
@@ -240,7 +228,7 @@ class TopLevelController extends GetxController {
       if (player.playing) {
         await player.pause();
       } else {
-        await player.play();
+        await _startPlayback();
       }
 
     } catch (e) {
@@ -275,10 +263,6 @@ class TopLevelController extends GetxController {
   }
 
   Future<void> stopSong() async {
-
-    // invalidate old loads
-    _loadRequestId++;
-
     await player.stop();
 
     isPlaying.value = false;
@@ -287,62 +271,6 @@ class TopLevelController extends GetxController {
     totalSeconds.value = 0;
   }
 
-  Future<void> nextSong() async {
-
-    if (suggestions.isEmpty ||
-        selectedSong.value == null) {
-      return;
-    }
-
-    final currentIndex =
-    suggestions.indexWhere(
-          (e) =>
-      e.videoId ==
-          selectedSong.value?.videoId,
-    );
-
-    if (currentIndex == -1) {
-      return;
-    }
-
-    final nextIndex = currentIndex + 1;
-
-    if (nextIndex < suggestions.length) {
-
-      await loadSong(
-        suggestions[nextIndex],
-      );
-    }
-  }
-
-  Future<void> previousSong() async {
-
-    if (suggestions.isEmpty ||
-        selectedSong.value == null) {
-      return;
-    }
-
-    final currentIndex =
-    suggestions.indexWhere(
-          (e) =>
-      e.videoId ==
-          selectedSong.value?.videoId,
-    );
-
-    if (currentIndex == -1) {
-      return;
-    }
-
-    final previousIndex =
-        currentIndex - 1;
-
-    if (previousIndex >= 0) {
-
-      await loadSong(
-        suggestions[previousIndex],
-      );
-    }
-  }
 
   @override
   void onClose() {
@@ -350,6 +278,7 @@ class TopLevelController extends GetxController {
     _positionSub?.cancel();
     _durationSub?.cancel();
     _playerStateSub?.cancel();
+    _loadingStateListenerSub?.cancel();
 
     player.dispose();
 

@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:apple_music/utils/endpoints/visitorIdfetcher.dart';
 import 'package:http/http.dart' as http;
 
+import '../RandomStringGenerator.dart';
+
 Future<Map<String, dynamic>> androidPlayerResponse(
-    String cpn,
-    String visitorData,
     String videoId,
-    String t,
+    String visitorData
     ) async {
+  final cpn = RandomStringGenerator.generateContentPlaybackNonce();
+  final t = RandomStringGenerator.generateTParameter();
+
   final url =
       "https://youtubei.googleapis.com/youtubei/v1/reel/reel_item_watch"
       "?prettyPrint=false&t=$t&id=$videoId&\$fields=playerResponse";
@@ -64,4 +68,28 @@ Future<Map<String, dynamic>> androidPlayerResponse(
   }
 
   return jsonDecode(response.body) as Map<String, dynamic>;
+}
+
+String? extractAudioUrl(Map<String, dynamic> playerResponse) {
+  final streamingData = playerResponse["streamingData"];
+  final adaptiveFormats = streamingData is Map<String, dynamic>
+      ? streamingData["adaptiveFormats"]
+      : null;
+
+  if (adaptiveFormats is! List) {
+    return null;
+  }
+
+  for (final format in adaptiveFormats) {
+    if (format is Map && format["itag"] == 140) {
+      final audio140 = Map<String, dynamic>.from(format);
+      final audioUrl = audio140["url"];
+
+      if (audioUrl is String && audioUrl.isNotEmpty) {
+        return audioUrl;
+      }
+    }
+  }
+
+  return null;
 }

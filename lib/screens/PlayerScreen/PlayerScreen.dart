@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:apple_music/TopLevelController.dart';
@@ -17,15 +18,48 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TopLevelController controller = Get.find<TopLevelController>();
+    bool isWindows = Platform.isWindows;
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: SafeArea(
-          bottom: false,
-          child: SizedBox(height: 0),
-        ),
-      ),
+      appBar: isWindows
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () => Get.back(),
+                        icon: const Icon(
+                          Icons.chevron_left,
+                          color: Color(0xFFFF2D55),
+                          size: 28,
+                        ),
+                      ),
+                      const Text(
+                        "Now Playing",
+                        style: TextStyle(
+                          color: Color(0xFFFF2D55),
+                          fontFamily: "SFPro",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : PreferredSize(
+              preferredSize: const Size.fromHeight(0),
+              child: SafeArea(
+                bottom: false,
+                child: SizedBox(height: 0),
+              ),
+            ),
       body: Stack(
         fit: StackFit.expand,
         children: [

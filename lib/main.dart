@@ -36,4 +36,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
+// flutter build apk --split-per-abi
