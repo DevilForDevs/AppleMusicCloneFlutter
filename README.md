@@ -130,11 +130,64 @@ Main components include:
 
 ---
 
-# Running the Project
+# Steps to Run This Project or Build the APK Yourself
 
-## Clone Repository
+## Prerequisites
 
-```bash
-git clone https://github.com/DevilForDevs/AppleMusicCloneFlutter
+Make sure the following tools are installed on your PC:
 
+1. Android Studio  
+2. Android SDK  
+3. Flutter SDK  
+4. Git  
+
+---
+
+## Clone the Project
+
+1. Open **Android Studio**
+2. Click the **three dots (⋮)** in the top-right corner beside **Open**
+3. Select **"Get From Version Control"**
+4. Choose **Git**
+5. Paste the repository URL below:
+
+```txt
+https://github.com/DevilForDevs/AppleMusicCloneFlutter
+```
+
+6. Click **Clone**
+
+---
+
+## Open & Run the Project
+
+1. Wait for Android Studio to finish indexing and syncing
+2. Open the terminal inside the project folder
+3. Run the following command:
+
+```cmd
+flutter pub get
+```
+
+4. Connect an Android device or start an emulator
+5. Run the app using:
+
+```cmd
+flutter run
+```
+
+---
+
+## Build Release APK
+
+To generate a release APK, run:
+
+```cmd
+flutter build apk --release
+```
+
+After the build is complete, the APK will be available at:
+
+```txt
+build\app\outputs\flutter-apk\app-release.apk
 ```
